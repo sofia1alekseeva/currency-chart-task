@@ -52,6 +52,12 @@ const Chart: FC<{
       intersect: false,
     },
     stacked: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Курсы валют к рублю',
+      },
+    },
     scales: {
       y: {
         type: "linear" as const,
