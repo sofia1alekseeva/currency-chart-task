@@ -18,12 +18,6 @@
   gap: 20px;
 }
 
-@media screen and (max-width: 992px) {
-  .filter_container {
-    flex-direction: row;
-  }
-}
-
 .currencies {
   display: flex;
   flex-direction: column;

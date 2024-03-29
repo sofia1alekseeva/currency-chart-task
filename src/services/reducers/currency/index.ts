@@ -38,8 +38,9 @@ const currenciesSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getRubCurrencyListThunk.pending, (state) => {
-        state.loading = "pending";
+    .addCase(getRubCurrencyListThunk.pending, (state) => {
+      state.loading = "pending";
+      state.requestsCount += 1;
       })
       .addCase(getRubCurrencyListThunk.rejected, (state, action) => {
         state.loading = "failed";
@@ -49,7 +50,6 @@ const currenciesSlice = createSlice({
         state.loading = "succeeded";
         state.currencyData.push(action.payload.data);
         state.currencyData.sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        state.requestsCount += 1;
         state.error = initialState.error;
       });
   },

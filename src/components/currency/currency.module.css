@@ -13,21 +13,28 @@
 .checkbox {
   accent-color: grey;
   cursor: pointer;
-  transform: scale(2);
+  -webkit-transform: scale(1.6);    
+  -moz-transform: scale(1.6);
+  -o-transform: scale(1.6);
+  -ms-transform: scale(1.6);
+  transform: scale(1.6);
+  border-radius: 1.2px;
   font-size: inherit;
   position: relative;
 }
 
 .checkbox:checked:after {
+  padding: 0;
   content: "✔";
-  font-size: 100%;
+  font-size: 15px;
+  text-align: center;
   background: white;
   line-height: 7px;
-  border-radius: 1px;
+  border-radius: 1.2px;
   position: absolute;
   width: 11px;
   height: 11px;
   top: 48%;
-  left: 50%;
+  margin-left: 50%;
   transform: translate(-50%, -50%);
 }

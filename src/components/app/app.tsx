@@ -2,7 +2,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import Currency from "../currency/currency";
 import Chart from "../chart/chart";
 import { currenciesInfo } from "../../utils/constants";
-import { TCurrencies } from "../../types";
 import DateItem from "../date-item/date-item";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
@@ -21,7 +20,7 @@ const App = () => {
   const dispatch = useAppDispatch();
   const requestsCount = useAppSelector(requestsCountSelector);
   const [fromDate, setFromDate] = useState<Date>(
-    moment().subtract(6,"days").toDate()
+    moment().subtract(6, "days").toDate()
   );
   const [toDate, setToDate] = useState<Date>(moment().toDate());
   const [currencies, setCurrencies] = useState<Array<string>>([]);
@@ -44,42 +43,40 @@ const App = () => {
   }, [fromDate, toDate]);
 
   return (
-    <>
-      <main className={styles.main_container}>
-        <section className={styles.chart_section}>
-          <div className={styles.filter_container}>
-            <div className={styles.currencies}>
-              {currenciesInfo.map((cur) => (
-                <Currency
-                  key={cur.id}
-                  name={cur.name}
-                  id={cur.id}
-                  onChange={onCurrencyChange}
-                />
-              ))}
-            </div>
-            <div className={styles.dates}>
-              <DateItem
-                id="fromDate"
-                name="Дата с"
-                selected={fromDate}
-                onChange={setFromDate}
+    <main className={styles.main_container}>
+      <section className={styles.chart_section}>
+        <div className={styles.filter_container}>
+          <div className={styles.currencies}>
+            {currenciesInfo.map((cur) => (
+              <Currency
+                key={cur.id}
+                name={cur.name}
+                id={cur.id}
+                onChange={onCurrencyChange}
               />
-              <DateItem
-                id="toDate"
-                name="Дата по"
-                selected={toDate}
-                onChange={setToDate}
-              />
-            </div>
+            ))}
           </div>
-          <Chart currencies={currencies} />
-        </section>
-        <span className={styles.requests_count}>
-          Число запросов в API: {requestsCount}
-        </span>
-      </main>
-    </>
+          <div className={styles.dates}>
+            <DateItem
+              id="fromDate"
+              name="Дата с"
+              selected={fromDate}
+              onChange={setFromDate}
+            />
+            <DateItem
+              id="toDate"
+              name="Дата по"
+              selected={toDate}
+              onChange={setToDate}
+            />
+          </div>
+        </div>
+        <Chart currencies={currencies} />
+      </section>
+      <span className={styles.requests_count}>
+        Число запросов в API: {requestsCount}
+      </span>
+    </main>
   );
 };
 
