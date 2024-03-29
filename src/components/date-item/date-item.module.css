@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.label {
+  width: 100px;
+  cursor: pointer;
+  font-size: 120%;
+}
+
+.date_picker {
+  font-size: 120%;
+  text-align: center;
+}
