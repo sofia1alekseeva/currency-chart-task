@@ -14,7 +14,13 @@ import { currenciesInfo } from "../../utils/constants";
 import styles from "./chart.module.css";
 import { formatDate } from "../../utils/functions";
 import { useAppSelector } from "../../hooks";
-import { currencyDataSelector } from "../../services/reducers/currency/selectors";
+import {
+  currencyDataSelector,
+  errorSelector,
+  loadingSelector,
+} from "../../services/reducers/currency/selectors";
+import Loader from "../loader/loader";
+import ErrorText from "../error/error-text";
 
 ChartJS.register(
   CategoryScale,
@@ -30,6 +36,10 @@ const Chart: FC<{
   currencies: Array<string>;
 }> = ({ currencies }) => {
   const currencyData = useAppSelector(currencyDataSelector);
+  const loading = useAppSelector(loadingSelector);
+  const error = useAppSelector(errorSelector);
+  const isLoading = loading === "pending";
+
   const data = {
     labels: currencyData.map(({ date }) => formatDate(date)),
     datasets: currencies.map((cur) => {
@@ -55,7 +65,7 @@ const Chart: FC<{
     plugins: {
       title: {
         display: true,
-        text: 'Курсы валют к рублю',
+        text: "Курсы валют к рублю",
       },
     },
     scales: {
@@ -68,7 +78,13 @@ const Chart: FC<{
   };
   return (
     <div className={styles.container}>
-      <Line options={options} data={data} />
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <ErrorText error={error} />
+      ) : (
+        <Line options={options} data={data} />
+      )}
     </div>
   );
 };
