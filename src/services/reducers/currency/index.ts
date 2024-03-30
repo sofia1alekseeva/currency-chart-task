@@ -40,6 +40,9 @@ const currenciesSlice = createSlice({
     clearNoDataDates: (state) => {
       state.noDataDates = [];
     },
+    clearError: (state) => {
+      state.error = undefined;
+    }
   },
   extraReducers(builder) {
     builder
@@ -66,7 +69,7 @@ const currenciesSlice = createSlice({
   },
 });
 
-export const { clearCurrenciesData, clearNoDataDates } =
+export const { clearCurrenciesData, clearNoDataDates, clearError } =
   currenciesSlice.actions;
 
 export default currenciesSlice.reducer;

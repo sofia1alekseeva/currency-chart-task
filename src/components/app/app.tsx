@@ -5,6 +5,7 @@ import { currenciesInfo } from "../../utils/constants";
 import DateItem from "../date-item/date-item";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
+  clearError,
   clearNoDataDates,
   getRubCurrenciesListThunk,
 } from "../../services/reducers/currency";
@@ -57,6 +58,7 @@ const App = () => {
           dispatch(getRubCurrenciesListThunk(apiDate));
         }
         dispatch(clearNoDataDates());
+        dispatch(clearError());
       });
     }
   }, [fromDate, toDate, currencies]);
@@ -92,7 +94,6 @@ const App = () => {
               id="toDate"
               name="Дата по"
               selected={toDate}
-              // onChange={setToDate}
               onChange={(value: Date) =>
                 setToDate((prev) => {
                   toDateRef.current = prev;
