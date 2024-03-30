@@ -14,7 +14,7 @@ type TInitialState = {
   }[];
   requestsCount: number;
   loading?: string;
-  error?: string | SerializedError;
+  error?: SerializedError;
 };
 export const initialState: TInitialState = {
   currencyData: [],
@@ -38,18 +38,20 @@ const currenciesSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-    .addCase(getRubCurrencyListThunk.pending, (state) => {
-      state.loading = "pending";
-      state.requestsCount += 1;
+      .addCase(getRubCurrencyListThunk.pending, (state) => {
+        state.loading = "pending";
+        state.requestsCount += 1;
       })
       .addCase(getRubCurrencyListThunk.rejected, (state, action) => {
         state.loading = "failed";
-        state.error = action.error.message;
+        state.error = action.error;
       })
       .addCase(getRubCurrencyListThunk.fulfilled, (state, action) => {
         state.loading = "succeeded";
         state.currencyData.push(action.payload.data);
-        state.currencyData.sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        state.currencyData.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
         state.error = initialState.error;
       });
   },

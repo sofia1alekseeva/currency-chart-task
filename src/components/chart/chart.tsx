@@ -20,7 +20,7 @@ import {
   loadingSelector,
 } from "../../services/reducers/currency/selectors";
 import Loader from "../loader/loader";
-import ErrorText from "../error/error-text";
+import ErrorMessage from "../error-message/error-message";
 
 ChartJS.register(
   CategoryScale,
@@ -81,7 +81,7 @@ const Chart: FC<{
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <ErrorText error={error} />
+        <ErrorMessage error={error} />
       ) : (
         <Line options={options} data={data} />
       )}
