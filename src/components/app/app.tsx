@@ -13,12 +13,16 @@ import {
   formatApiDate,
 } from "../../utils/functions";
 import moment from "moment";
-import { requestsCountSelector } from "../../services/reducers/currency/selectors";
+import {
+  currencyDataSelector,
+  requestsCountSelector,
+} from "../../services/reducers/currency/selectors";
 import styles from "./app.module.css";
 
 const App = () => {
   const dispatch = useAppDispatch();
   const requestsCount = useAppSelector(requestsCountSelector);
+  const currencyData = useAppSelector(currencyDataSelector);
   const [fromDate, setFromDate] = useState<Date>(
     moment().subtract(6, "days").toDate()
   );
@@ -36,6 +40,9 @@ const App = () => {
 
   useEffect(() => {
     dispatch(clearCurrencyData());
+    if (fromDate > toDate) {
+      setFromDate(toDate);
+    }
     const dates = enumerateDaysBetweenDates(fromDate, toDate);
     dates.forEach((date) =>
       dispatch(getRubCurrencyListThunk(formatApiDate(date)))
@@ -62,6 +69,7 @@ const App = () => {
               name="Дата с"
               selected={fromDate}
               onChange={setFromDate}
+              maxDate={toDate}
             />
             <DateItem
               id="toDate"
