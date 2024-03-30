@@ -11,3 +11,5 @@ API - https://github.com/fawazahmed0/exchange-api
 
 ## Запуск
 Для запуска приложения воспользуйтесь командой 'npm run start' в терминале
+
+Приложение запускается на http://localhost:3000/
