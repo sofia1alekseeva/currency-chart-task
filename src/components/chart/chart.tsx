@@ -82,8 +82,10 @@ const Chart: FC<{
         <Loader />
       ) : error ? (
         <ErrorMessage error={error} />
-      ) : (
+      ) : currencies.length !== 0 ? (
         <Line options={options} data={data} />
+      ) : (
+        <span>Выберите валюту</span>
       )}
     </div>
   );

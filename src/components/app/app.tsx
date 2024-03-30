@@ -1,28 +1,34 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Currency from "../currency/currency";
 import Chart from "../chart/chart";
 import { currenciesInfo } from "../../utils/constants";
 import DateItem from "../date-item/date-item";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
-  clearCurrencyData,
-  getRubCurrencyListThunk,
+  clearNoDataDates,
+  getRubCurrenciesListThunk,
 } from "../../services/reducers/currency";
 import {
   enumerateDaysBetweenDates,
   formatApiDate,
 } from "../../utils/functions";
 import moment from "moment";
-import { requestsCountSelector } from "../../services/reducers/currency/selectors";
+import {
+  currencyDataSelector,
+  requestsCountSelector,
+} from "../../services/reducers/currency/selectors";
 import styles from "./app.module.css";
 
 const App = () => {
   const dispatch = useAppDispatch();
   const requestsCount = useAppSelector(requestsCountSelector);
+  const currencyData = useAppSelector(currencyDataSelector);
   const [fromDate, setFromDate] = useState<Date>(
     moment().subtract(6, "days").toDate()
   );
   const [toDate, setToDate] = useState<Date>(moment().toDate());
+  const fromDateRef = useRef<Date | null>(null);
+  const toDateRef = useRef<Date | null>(null);
   const [currencies, setCurrencies] = useState<Array<string>>([]);
 
   const onCurrencyChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -35,15 +41,25 @@ const App = () => {
   };
 
   useEffect(() => {
-    dispatch(clearCurrencyData());
-    if (fromDate > toDate) {
-      setFromDate(toDate);
+    if (
+      currencies.length !== 0 &&
+      (fromDate !== fromDateRef.current || toDate !== toDateRef.current)
+    ) {
+      fromDateRef.current = fromDate;
+      toDateRef.current = toDate;
+      if (fromDate > toDate) {
+        setFromDate(toDate);
+      }
+      const dates = enumerateDaysBetweenDates(fromDate, toDate);
+      dates.forEach((date) => {
+        const apiDate = formatApiDate(date);
+        if (!currencyData.find((data) => data.date === apiDate)) {
+          dispatch(getRubCurrenciesListThunk(apiDate));
+        }
+        dispatch(clearNoDataDates());
+      });
     }
-    const dates = enumerateDaysBetweenDates(fromDate, toDate);
-    dates.forEach((date) =>
-      dispatch(getRubCurrencyListThunk(formatApiDate(date)))
-    );
-  }, [fromDate, toDate]);
+  }, [fromDate, toDate, currencies]);
 
   return (
     <main className={styles.main_container}>
@@ -64,14 +80,25 @@ const App = () => {
               id="fromDate"
               name="Дата с"
               selected={fromDate}
-              onChange={setFromDate}
+              onChange={(value: Date) =>
+                setFromDate((prev) => {
+                  fromDateRef.current = prev;
+                  return value;
+                })
+              }
               maxDate={toDate}
             />
             <DateItem
               id="toDate"
               name="Дата по"
               selected={toDate}
-              onChange={setToDate}
+              // onChange={setToDate}
+              onChange={(value: Date) =>
+                setToDate((prev) => {
+                  toDateRef.current = prev;
+                  return value;
+                })
+              }
             />
           </div>
         </div>

@@ -3,10 +3,10 @@ import {
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit";
-import { getRubCurrencyList } from "../../../utils/api";
+import { getRubCurrenciesList } from "../../../utils/api";
 
 type TInitialState = {
-  currencyData: {
+  currenciesData: {
     date: string;
     rub: {
       [key: string]: number;
@@ -15,41 +15,50 @@ type TInitialState = {
   requestsCount: number;
   loading?: string;
   error?: SerializedError;
+  noDataDates: Array<Date>;
 };
 export const initialState: TInitialState = {
-  currencyData: [],
+  currenciesData: [],
   requestsCount: 0,
   loading: "",
+  noDataDates: [],
   error: undefined,
 };
 
-export const getRubCurrencyListThunk = createAsyncThunk(
+export const getRubCurrenciesListThunk = createAsyncThunk(
   "rub",
-  getRubCurrencyList
+  getRubCurrenciesList
 );
 
 const currenciesSlice = createSlice({
   name: "currencies",
   initialState,
   reducers: {
-    clearCurrencyData: (state) => {
-      state.currencyData = [];
+    clearCurrenciesData: (state) => {
+      state.currenciesData = [];
+    },
+    clearNoDataDates: (state) => {
+      state.noDataDates = [];
     },
   },
   extraReducers(builder) {
     builder
-      .addCase(getRubCurrencyListThunk.pending, (state) => {
+      .addCase(getRubCurrenciesListThunk.pending, (state) => {
         state.loading = "pending";
         state.requestsCount += 1;
       })
-      .addCase(getRubCurrencyListThunk.rejected, (state, action) => {
+      .addCase(getRubCurrenciesListThunk.rejected, (state, action) => {
         state.loading = "failed";
         state.error = action.error;
+        const noDataDate = action.meta.arg;
+        if (noDataDate) {
+          state.noDataDates.push(new Date(noDataDate));
+        }
       })
-      .addCase(getRubCurrencyListThunk.fulfilled, (state, action) => {
+      .addCase(getRubCurrenciesListThunk.fulfilled, (state, action) => {
         state.loading = "succeeded";
-        state.currencyData.push(action.payload.data);
-        state.currencyData.sort(
+        state.currenciesData.push(action.payload.data);
+        state.currenciesData.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         );
         state.error = initialState.error;
@@ -57,6 +66,7 @@ const currenciesSlice = createSlice({
   },
 });
 
-export const { clearCurrencyData } = currenciesSlice.actions;
+export const { clearCurrenciesData, clearNoDataDates } =
+  currenciesSlice.actions;
 
 export default currenciesSlice.reducer;
