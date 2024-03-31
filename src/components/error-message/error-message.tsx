@@ -3,7 +3,7 @@ import { FC } from "react";
 import { ErrorCodeMessages } from "../../utils/enums";
 import { useAppSelector } from "../../hooks";
 import { noDataDatesSelector } from "../../services/reducers/currency/selectors";
-import { formatDate } from "../../utils/functions";
+import { getDateRanges } from "../../utils/functions";
 
 const ErrorMessage: FC<{ error: SerializedError }> = ({ error }) => {
   const noDataDates = useAppSelector(noDataDatesSelector);
@@ -18,11 +18,7 @@ const ErrorMessage: FC<{ error: SerializedError }> = ({ error }) => {
           : error.message}
         <br />
         <br />
-        {noDataDates && 
-          [...noDataDates]
-            .sort((a, b) => new Date(a).valueOf() - new Date(b).valueOf())
-            .map(formatDate)
-            .join(", ")}
+        {noDataDates && getDateRanges([...noDataDates])}
       </p>
     </>
   );

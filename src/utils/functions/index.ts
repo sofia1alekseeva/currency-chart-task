@@ -1,11 +1,11 @@
-import moment from "moment";
+import moment, { Moment } from "moment";
 
 /**
  * Форматирование даты в формат для отображения
  * @param date дата (строка или тип Date)
  * @returns дата в формате 01.01.2000
  */
-export const formatDate = (date: Date | string): string =>
+export const formatDate = (date: Date | Moment | string): string =>
   moment(date).format("DD.MM.yyyy");
 
 /**
@@ -32,4 +32,40 @@ export const enumerateDaysBetweenDates = (
     startDate = moment(startDate).add(1, "days").toDate();
   }
   return date;
+};
+
+const getOneDateRange = (sequence: Array<Moment>) => {
+  const first = formatDate(sequence[0]);
+  if (sequence.length === 1) {
+    return first;
+  }
+  const last = formatDate(sequence[sequence.length - 1]);
+  return `${first}-${last}`;
+};
+
+export const getDateRanges = (dates: Array<Date>) => {
+  const ranges: string[] = [];
+  let tempArr: Moment[] = [];
+  if (dates.length === 1) {
+    return formatApiDate(dates[0]);
+  }
+  dates
+    .sort((a, b) => new Date(a).valueOf() - new Date(b).valueOf())
+    .forEach((date, index) => {
+      const current = moment(date);
+      const next = moment(dates[index + 1]);
+      const diff = next.diff(current, "days");
+      if (diff === 1) {
+        if (dates[index + 1]) {
+          tempArr.push(current, next);
+        } else {
+          tempArr.push(current);
+        }
+      } else if (index === dates.length - 1 || diff > 1) {
+        const range = getOneDateRange(tempArr);
+        ranges.push(range);
+        tempArr = [];
+      }
+    });
+  return ranges.join(", ");
 };

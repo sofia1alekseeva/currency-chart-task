@@ -48,9 +48,6 @@ const App = () => {
     ) {
       fromDateRef.current = fromDate;
       toDateRef.current = toDate;
-      if (fromDate > toDate) {
-        setFromDate(toDate);
-      }
       const dates = enumerateDaysBetweenDates(fromDate, toDate);
       dates.forEach((date) => {
         const apiDate = formatApiDate(date);
@@ -100,6 +97,7 @@ const App = () => {
                   return value;
                 })
               }
+              maxDate={moment().toDate()}
             />
           </div>
         </div>
