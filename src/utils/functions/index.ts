@@ -47,7 +47,7 @@ export const getDateRanges = (dates: Array<Date>) => {
   const ranges: string[] = [];
   let tempArr: Moment[] = [];
   if (dates.length === 1) {
-    return formatApiDate(dates[0]);
+    return formatDate(dates[0]);
   }
   dates
     .sort((a, b) => new Date(a).valueOf() - new Date(b).valueOf())
