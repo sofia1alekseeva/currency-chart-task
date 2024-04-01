@@ -21,6 +21,7 @@ import {
 } from "../../services/reducers/currency/selectors";
 import Loader from "../loader/loader";
 import ErrorMessage from "../error-message/error-message";
+import moment from "moment";
 
 ChartJS.register(
   CategoryScale,
@@ -34,17 +35,20 @@ ChartJS.register(
 
 const Chart: FC<{
   currencies: Array<string>;
-}> = ({ currencies }) => {
+  fromDate: Date;
+  toDate: Date;
+}> = ({ currencies, fromDate, toDate }) => {
   const currencyData = useAppSelector(currencyDataSelector);
   const loading = useAppSelector(loadingSelector);
   const error = useAppSelector(errorSelector);
   const isLoading = loading === "pending";
-
+  const filteredCurrencies = currencyData.filter(({date}) => moment(date).diff(moment(fromDate), 'days') >=0 && moment(date).isSameOrBefore(moment(toDate)));
+  
   const data = {
-    labels: currencyData.map(({ date }) => formatDate(date)),
+    labels: filteredCurrencies.map(({ date }) => formatDate(date)),
     datasets: currencies.map((cur) => {
       const curInfo = currenciesInfo.find(({ id }) => cur === id);
-      const datesData = currencyData.map(({ rub }) => 1 / rub[cur]);
+      const datesData = filteredCurrencies.map(({ rub }) => 1 / rub[cur]);
       return {
         label: curInfo?.name,
         data: datesData,

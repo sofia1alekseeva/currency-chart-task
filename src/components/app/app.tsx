@@ -98,10 +98,11 @@ const App = () => {
                 })
               }
               maxDate={moment().toDate()}
+              minDate={fromDate}
             />
           </div>
         </div>
-        <Chart currencies={currencies} />
+        <Chart currencies={currencies} fromDate={fromDate} toDate={toDate} />
       </section>
       <span className={styles.requests_count}>
         Число запросов в API: {requestsCount}

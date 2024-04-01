@@ -9,6 +9,7 @@ type TDateItemProps = {
   name: string;
   selected: Date;
   maxDate?: Date | undefined;
+  minDate?: Date | undefined;
   onChange: CallableFunction;
 };
 registerLocale("ru", ru);
@@ -18,6 +19,7 @@ const DateItem: FC<TDateItemProps> = ({
   name,
   selected,
   maxDate,
+  minDate,
   onChange,
 }) => {
   return (
@@ -34,6 +36,7 @@ const DateItem: FC<TDateItemProps> = ({
         popperPlacement="bottom-end"
         locale="ru"
         maxDate={maxDate}
+        minDate={minDate}
       />
     </div>
   );
