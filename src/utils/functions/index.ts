@@ -49,23 +49,21 @@ export const getDateRanges = (dates: Array<Date>) => {
   if (dates.length === 1) {
     return formatDate(dates[0]);
   }
-  dates
-    .sort((a, b) => new Date(a).valueOf() - new Date(b).valueOf())
-    .forEach((date, index) => {
-      const current = moment(date);
-      const next = moment(dates[index + 1]);
-      const diff = next.diff(current, "days");
-      if (diff === 1) {
-        if (dates[index + 1]) {
-          tempArr.push(current, next);
-        } else {
-          tempArr.push(current);
-        }
-      } else if (index === dates.length - 1 || diff > 1) {
-        const range = getOneDateRange(tempArr);
-        ranges.push(range);
-        tempArr = [];
+  dates.forEach((date, index) => {
+    const current = moment(date);
+    const next = moment(dates[index + 1]);
+    const diff = next.diff(current, "days");
+    if (diff === 1) {
+      if (dates[index + 1]) {
+        tempArr.push(current, next);
+      } else {
+        tempArr.push(current);
       }
-    });
+    } else if (index === dates.length - 1 || diff > 1) {
+      const range = getOneDateRange(tempArr);
+      ranges.push(range);
+      tempArr = [];
+    }
+  });
   return ranges.join(", ");
 };

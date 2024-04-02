@@ -16,6 +16,7 @@ import {
 import moment from "moment";
 import {
   currencyDataSelector,
+  noDataDatesSelector,
   requestsCountSelector,
 } from "../../services/reducers/currency/selectors";
 import styles from "./app.module.css";
@@ -24,6 +25,7 @@ const App = () => {
   const dispatch = useAppDispatch();
   const requestsCount = useAppSelector(requestsCountSelector);
   const currencyData = useAppSelector(currencyDataSelector);
+  const noDataDates = useAppSelector(noDataDatesSelector);
   const [fromDate, setFromDate] = useState<Date>(
     moment().subtract(6, "days").toDate()
   );
@@ -51,12 +53,15 @@ const App = () => {
       const dates = enumerateDaysBetweenDates(fromDate, toDate);
       dates.forEach((date) => {
         const apiDate = formatApiDate(date);
-        if (!currencyData.find((data) => data.date === apiDate)) {
+        if (
+          !currencyData.find((data) => data.date === apiDate) &&
+          !noDataDates.find((date) => date === moment(apiDate).toDate())
+        ) {
           dispatch(getRubCurrenciesListThunk(apiDate));
         }
-        dispatch(clearNoDataDates());
-        dispatch(clearError());
       });
+      dispatch(clearNoDataDates());
+      dispatch(clearError());
     }
   }, [fromDate, toDate, currencies]);
 

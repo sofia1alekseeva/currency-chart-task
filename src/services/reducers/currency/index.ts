@@ -42,7 +42,7 @@ const currenciesSlice = createSlice({
     },
     clearError: (state) => {
       state.error = undefined;
-    }
+    },
   },
   extraReducers(builder) {
     builder
@@ -56,6 +56,9 @@ const currenciesSlice = createSlice({
         const noDataDate = action.meta.arg;
         if (noDataDate) {
           state.noDataDates.push(new Date(noDataDate));
+          state.noDataDates = state.noDataDates.sort(
+            (a, b) => a.valueOf() - b.valueOf()
+          );
         }
       })
       .addCase(getRubCurrenciesListThunk.fulfilled, (state, action) => {
