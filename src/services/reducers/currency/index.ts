@@ -16,6 +16,7 @@ type TInitialState = {
   loading?: string;
   error?: SerializedError;
   noDataDates: Array<Date>;
+  allRequestsFinished: boolean;
 };
 export const initialState: TInitialState = {
   currenciesData: [],
@@ -23,6 +24,7 @@ export const initialState: TInitialState = {
   loading: "",
   noDataDates: [],
   error: undefined,
+  allRequestsFinished: false,
 };
 
 export const getRubCurrenciesListThunk = createAsyncThunk(
@@ -43,6 +45,9 @@ const currenciesSlice = createSlice({
     clearError: (state) => {
       state.error = undefined;
     },
+    setAllRequestsFinished: (state, action) => {
+      state.allRequestsFinished = action.payload;
+    }
   },
   extraReducers(builder) {
     builder
@@ -72,7 +77,7 @@ const currenciesSlice = createSlice({
   },
 });
 
-export const { clearCurrenciesData, clearNoDataDates, clearError } =
+export const { clearCurrenciesData, clearNoDataDates, clearError, setAllRequestsFinished } =
   currenciesSlice.actions;
 
 export default currenciesSlice.reducer;

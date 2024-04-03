@@ -8,6 +8,7 @@ import {
   clearError,
   clearNoDataDates,
   getRubCurrenciesListThunk,
+  setAllRequestsFinished,
 } from "../../services/reducers/currency";
 import {
   enumerateDaysBetweenDates,
@@ -51,14 +52,19 @@ const App = () => {
       fromDateRef.current = fromDate;
       toDateRef.current = toDate;
       const dates = enumerateDaysBetweenDates(fromDate, toDate);
-      dates.forEach((date) => {
-        const apiDate = formatApiDate(date);
-        if (
-          !currencyData.find((data) => data.date === apiDate) &&
-          !noDataDates.find((date) => date === moment(apiDate).toDate())
-        ) {
-          dispatch(getRubCurrenciesListThunk(apiDate));
-        }
+      dispatch(setAllRequestsFinished(false));
+      Promise.all(
+        dates.map((date) => {
+          const apiDate = formatApiDate(date);
+          if (
+            !currencyData.find((data) => data.date === apiDate) &&
+            !noDataDates.find((date) => date === moment(apiDate).toDate())
+          ) {
+            return dispatch(getRubCurrenciesListThunk(apiDate));
+          }
+        })
+      ).finally(() => {
+        dispatch(setAllRequestsFinished(true));
       });
       dispatch(clearNoDataDates());
       dispatch(clearError());

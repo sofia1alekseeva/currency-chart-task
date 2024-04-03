@@ -15,6 +15,7 @@ import styles from "./chart.module.css";
 import { formatDate } from "../../utils/functions";
 import { useAppSelector } from "../../hooks";
 import {
+  allRequestsFinishedSelector,
   currencyDataSelector,
   errorSelector,
   loadingSelector,
@@ -42,8 +43,13 @@ const Chart: FC<{
   const loading = useAppSelector(loadingSelector);
   const error = useAppSelector(errorSelector);
   const isLoading = loading === "pending";
-  const filteredCurrencies = currencyData.filter(({date}) => moment(date).diff(moment(fromDate), 'days') >=0 && moment(date).isSameOrBefore(moment(toDate)));
-  
+  const filteredCurrencies = currencyData.filter(
+    ({ date }) =>
+      moment(date).diff(moment(fromDate), "days") >= 0 &&
+      moment(date).isSameOrBefore(moment(toDate))
+  );
+  const allRequestsFinished = useAppSelector(allRequestsFinishedSelector);
+
   const data = {
     labels: filteredCurrencies.map(({ date }) => formatDate(date)),
     datasets: currencies.map((cur) => {
@@ -82,14 +88,13 @@ const Chart: FC<{
   };
   return (
     <div className={styles.container}>
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
+      {currencies.length === 0 && <span>Выберите валюту</span>}
+      {isLoading && <Loader />}
+      {error && !isLoading && allRequestsFinished && (
         <ErrorMessage error={error} />
-      ) : currencies.length !== 0 ? (
+      )}
+      {currencies.length > 0 && !error && !isLoading && allRequestsFinished && (
         <Line options={options} data={data} />
-      ) : (
-        <span>Выберите валюту</span>
       )}
     </div>
   );

@@ -10,3 +10,5 @@ export const errorSelector = (state: RootState) =>
   state.currenciesReducer.error;
 export const noDataDatesSelector = (state: RootState) =>
   state.currenciesReducer.noDataDates;
+export const allRequestsFinishedSelector = (state: RootState) =>
+  state.currenciesReducer.allRequestsFinished;
