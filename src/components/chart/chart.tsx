@@ -18,7 +18,6 @@ import {
   allRequestsFinishedSelector,
   currencyDataSelector,
   errorSelector,
-  loadingSelector,
 } from "../../services/reducers/currency/selectors";
 import Loader from "../loader/loader";
 import ErrorMessage from "../error-message/error-message";
@@ -40,9 +39,7 @@ const Chart: FC<{
   toDate: Date;
 }> = ({ currencies, fromDate, toDate }) => {
   const currencyData = useAppSelector(currencyDataSelector);
-  const loading = useAppSelector(loadingSelector);
   const error = useAppSelector(errorSelector);
-  const isLoading = loading === "pending";
   const filteredCurrencies = currencyData.filter(
     ({ date }) =>
       moment(date).diff(moment(fromDate), "days") >= 0 &&
@@ -89,11 +86,9 @@ const Chart: FC<{
   return (
     <div className={styles.container}>
       {currencies.length === 0 && <span>Выберите валюту</span>}
-      {isLoading && <Loader />}
-      {error && !isLoading && allRequestsFinished && (
-        <ErrorMessage error={error} />
-      )}
-      {currencies.length > 0 && !error && !isLoading && allRequestsFinished && (
+      {currencies.length > 0 && !allRequestsFinished && <Loader />}
+      {error && allRequestsFinished && <ErrorMessage error={error} />}
+      {currencies.length > 0 && !error && allRequestsFinished && (
         <Line options={options} data={data} />
       )}
     </div>

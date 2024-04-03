@@ -52,7 +52,6 @@ const App = () => {
       fromDateRef.current = fromDate;
       toDateRef.current = toDate;
       const dates = enumerateDaysBetweenDates(fromDate, toDate);
-      dispatch(setAllRequestsFinished(false));
       Promise.all(
         dates.map((date) => {
           const apiDate = formatApiDate(date);
@@ -68,6 +67,7 @@ const App = () => {
       });
       dispatch(clearNoDataDates());
       dispatch(clearError());
+      dispatch(setAllRequestsFinished(false));
     }
   }, [fromDate, toDate, currencies]);
 

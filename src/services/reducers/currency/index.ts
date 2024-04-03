@@ -13,7 +13,6 @@ type TInitialState = {
     };
   }[];
   requestsCount: number;
-  loading?: string;
   error?: SerializedError;
   noDataDates: Array<Date>;
   allRequestsFinished: boolean;
@@ -21,7 +20,6 @@ type TInitialState = {
 export const initialState: TInitialState = {
   currenciesData: [],
   requestsCount: 0,
-  loading: "",
   noDataDates: [],
   error: undefined,
   allRequestsFinished: false,
@@ -52,11 +50,9 @@ const currenciesSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getRubCurrenciesListThunk.pending, (state) => {
-        state.loading = "pending";
         state.requestsCount += 1;
       })
       .addCase(getRubCurrenciesListThunk.rejected, (state, action) => {
-        state.loading = "failed";
         state.error = action.error;
         const noDataDate = action.meta.arg;
         if (noDataDate) {
@@ -67,7 +63,6 @@ const currenciesSlice = createSlice({
         }
       })
       .addCase(getRubCurrenciesListThunk.fulfilled, (state, action) => {
-        state.loading = "succeeded";
         state.currenciesData.push(action.payload.data);
         state.currenciesData.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
