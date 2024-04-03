@@ -85,7 +85,7 @@ const Chart: FC<{
   };
   return (
     <div className={styles.container}>
-      {currencies.length === 0 && <span>Выберите валюту</span>}
+      {currencies.length === 0 && !error && <span>Выберите валюту</span>}
       {currencies.length > 0 && !allRequestsFinished && <Loader />}
       {error && allRequestsFinished && <ErrorMessage error={error} />}
       {currencies.length > 0 && !error && allRequestsFinished && (
