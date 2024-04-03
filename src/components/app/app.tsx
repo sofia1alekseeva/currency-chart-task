@@ -48,7 +48,10 @@ const App = () => {
     if (
       currencies.length !== 0 &&
       (fromDate !== fromDateRef.current || toDate !== toDateRef.current)
-    ) {
+      ) {
+      dispatch(clearNoDataDates());
+      dispatch(clearError());
+      dispatch(setAllRequestsFinished(false));
       fromDateRef.current = fromDate;
       toDateRef.current = toDate;
       const dates = enumerateDaysBetweenDates(fromDate, toDate);
@@ -65,9 +68,6 @@ const App = () => {
       ).finally(() => {
         dispatch(setAllRequestsFinished(true));
       });
-      dispatch(clearNoDataDates());
-      dispatch(clearError());
-      dispatch(setAllRequestsFinished(false));
     }
   }, [fromDate, toDate, currencies]);
 
