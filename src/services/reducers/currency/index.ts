@@ -47,7 +47,7 @@ const currenciesSlice = createSlice({
     },
     setAllRequestsFinished: (state, action) => {
       state.allRequestsFinished = action.payload;
-    }
+    },
   },
   extraReducers(builder) {
     builder
@@ -77,7 +77,11 @@ const currenciesSlice = createSlice({
   },
 });
 
-export const { clearCurrenciesData, clearNoDataDates, clearError, setAllRequestsFinished } =
-  currenciesSlice.actions;
+export const {
+  clearCurrenciesData,
+  clearNoDataDates,
+  clearError,
+  setAllRequestsFinished,
+} = currenciesSlice.actions;
 
 export default currenciesSlice.reducer;
